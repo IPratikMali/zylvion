@@ -4,93 +4,111 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 const coverageAreas = [
   {
-    icon: '⬡',
-    title: 'Artificial Intelligence',
-    desc: 'LLM benchmarks, model releases, safety research, AI policy, and enterprise adoption. We go beyond the press releases.',
-    color: 'var(--purple)',
+    icon: '◈',
+    title: 'Geopolitical Trends',
+    desc: 'Great power competition, alliance shifts, and the structural forces reshaping the international order over decades.',
+    color: '#2A5C40',
   },
   {
-    icon: '⬡',
-    title: 'Cybersecurity',
-    desc: 'CVE analysis, APT tracking, malware reverse engineering, zero-days, and defensive research. Technical depth, not FUD.',
-    color: 'var(--neon)',
+    icon: '◈',
+    title: 'Economic Cycles',
+    desc: 'Long-wave economic patterns, structural unemployment, fiscal sustainability — the trends behind the headlines.',
+    color: '#3E7A5A',
   },
   {
-    icon: '⬡',
-    title: 'Hardware',
-    desc: 'Chip architectures, silicon news, GPU wars, embedded systems, and supply chain intelligence.',
-    color: 'var(--green)',
+    icon: '◈',
+    title: 'Technology Shifts',
+    desc: 'Platform transitions, infrastructure bets, and the adoption curves that determine which technologies become permanent.',
+    color: '#5C4E38',
   },
   {
-    icon: '⬡',
-    title: 'Policy & Regulation',
-    desc: 'EU AI Act, US AI executive orders, GDPR enforcement, antitrust cases, and the politics shaping technology.',
-    color: 'var(--cyan)',
+    icon: '◈',
+    title: 'Climate & Energy',
+    desc: 'The energy transition as a multi-decade strategic story — investment flows, policy trajectories, and industrial change.',
+    color: '#224D35',
   },
   {
-    icon: '⬡',
-    title: 'Crypto & Web3',
-    desc: 'DeFi protocols, blockchain security, regulatory developments, and on-chain analytics without the hype.',
-    color: 'var(--yellow)',
+    icon: '◈',
+    title: 'Demographic Change',
+    desc: 'Ageing societies, migration patterns, urbanisation, and the population forces shaping politics and economics.',
+    color: '#8C7D62',
   },
   {
-    icon: '⬡',
-    title: 'Open Source',
-    desc: 'Project launches, governance crises, licensing disputes, and the ecosystems shaping modern software.',
-    color: 'var(--cyan)',
+    icon: '◈',
+    title: 'Institutional Evolution',
+    desc: 'How democracies, corporations, international bodies, and legal systems adapt — or fail to — under structural pressure.',
+    color: '#BAAD93',
   },
 ];
 
 const standards = [
   {
-    title: 'Technical Accuracy',
-    desc: 'We verify claims with primary sources — CVE databases, SEC filings, academic papers, and direct researcher contact.',
+    title: 'Independent Editorial',
+    desc: 'Our coverage is driven entirely by editorial judgement. We have no sponsored content and no advertiser influence over what we cover or how we cover it.',
   },
   {
-    title: 'No Sponsored Content',
-    desc: 'Editorial is independent of advertising. We never publish paid-for "coverage" disguised as news.',
+    title: 'Primary Source Commitment',
+    desc: 'We verify claims using primary sources — official documents, data repositories, direct expert contact, and original research. We do not repackage press releases as news.',
+  },
+  {
+    title: 'Transparent Corrections',
+    desc: 'When we make factual errors, we correct them prominently and disclose the change. We never silently edit published articles.',
   },
   {
     title: 'Source Protection',
-    desc: 'We protect whistleblowers and researchers who come to us with sensitive disclosures.',
+    desc: 'We protect the identities of sources who come to us with sensitive information or disclosures in the public interest.',
+  },
+];
+
+const team = [
+  {
+    name: 'Editorial Team',
+    role: 'Journalists & Analysts',
+    bio: 'Our editorial team combines subject-matter specialists with experienced journalists. Every article is reviewed for factual accuracy, editorial fairness, and clarity before publication.',
   },
   {
-    title: 'Corrections Policy',
-    desc: 'We issue prominent corrections on factual errors and never quietly edit stories without disclosure.',
+    name: 'Research & Verification',
+    role: 'Fact-Checking Desk',
+    bio: 'A dedicated verification process ensures claims are traced to primary sources. We cross-reference data, contact named parties for comment, and document our sourcing for every piece.',
   },
 ];
 ---
 
 <BaseLayout
   title={`About — ${SITE_TITLE}`}
-  description="TechAudit covers breaking tech news, deep-dive security research, and critical analysis on AI, cybersecurity, hardware, and policy."
+  description={`Learn about ${SITE_TITLE} — our editorial mission, coverage areas, team, and standards. ${SITE_DESCRIPTION}`}
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": `About — ${SITE_TITLE}`,
+    "url": "https://zylvion.xyz/about",
+    "description": SITE_DESCRIPTION,
+    "publisher": {
+      "@type": "NewsMediaOrganization",
+      "name": SITE_TITLE,
+      "url": "https://zylvion.xyz",
+      "logo": { "@type": "ImageObject", "url": "https://zylvion.xyz/favicon.svg" }
+    }
+  })} />
+
   <div class="about-page">
-    <!-- Page Hero -->
     <div class="about-hero">
       <div class="container">
-        <div class="hero-label">
-          <span class="mono-tag">// ABOUT</span>
-        </div>
-        <h1 class="about-title">Built for Engineers.<br/>Not Executives.</h1>
-        <p class="about-subtitle">{SITE_DESCRIPTION}</p>
+        <div class="hero-label"><span class="about-eyebrow">About Zylvion</span></div>
+        <h1 class="about-title">Today’s News. The Decade’s Arc.</h1>
+        <p class="about-subtitle">Zylvion situates today’s news inside the longer arcs of history, policy, and structural change — written for readers who think in decades.</p>
       </div>
     </div>
 
     <div class="container">
 
-      <!-- Mission -->
       <section class="about-section">
-        <div class="section-header">
-          <h2>Mission</h2>
+        <div class="section-hed">
+          <span class="section-hed-label">Our Mission</span>
         </div>
         <div class="mission-block panel">
-          <p class="mission-text">
-            TechAudit exists because the technology press has a depth problem. Surface-level summaries of press releases don't serve engineers, security researchers, or policy analysts who need to understand what's actually happening under the hood.
-          </p>
-          <p class="mission-text">
-            We cover AI model releases with benchmark deep-dives, security vulnerabilities with actual PoC analysis, hardware announcements with architecture breakdowns, and policy developments with technical context — because the people building and defending the internet deserve better than corporate-sanitized tech media.
-          </p>
+          <p class="mission-text">Zylvion was built for analysts, strategists, and policy thinkers who are tired of news with a 24-hour shelf life. We situate today’s events inside the longer patterns — the structural shifts, historical parallels, and slow-moving forces that determine what actually matters.</p>
           <div class="mission-stats">
             <div class="mission-stat">
               <span class="mission-stat-val">100%</span>
@@ -102,21 +120,20 @@ const standards = [
             </div>
             <div class="mission-stat">
               <span class="mission-stat-val">Daily</span>
-              <span class="mission-stat-label">Signal Newsletter</span>
+              <span class="mission-stat-label">Publishing Cadence</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Coverage Areas -->
       <section class="about-section">
-        <div class="section-header">
-          <h2>Coverage Areas</h2>
+        <div class="section-hed">
+          <span class="section-hed-label">Coverage Areas</span>
         </div>
         <div class="coverage-grid">
           {coverageAreas.map(area => (
             <div class="coverage-card panel">
-              <div class="coverage-icon" style={`color: ${area.color}`}>◈</div>
+              <div class="coverage-icon" style={`color: ${area.color}`}>{area.icon}</div>
               <h3 class="coverage-title" style={`color: ${area.color}`}>{area.title}</h3>
               <p class="coverage-desc">{area.desc}</p>
             </div>
@@ -124,10 +141,25 @@ const standards = [
         </div>
       </section>
 
-      <!-- Editorial Standards -->
       <section class="about-section">
-        <div class="section-header">
-          <h2>Editorial Standards</h2>
+        <div class="section-hed">
+          <span class="section-hed-label">Our Team</span>
+        </div>
+        <div class="team-grid">
+          {team.map(member => (
+            <div class="team-card panel">
+              <div class="team-avatar" aria-hidden="true">◈</div>
+              <h3 class="team-name">{member.name}</h3>
+              <p class="team-role">{member.role}</p>
+              <p class="team-bio">{member.bio}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="section-hed">
+          <span class="section-hed-label">Editorial Standards</span>
         </div>
         <div class="standards-grid">
           {standards.map(s => (
@@ -142,12 +174,11 @@ const standards = [
         </div>
       </section>
 
-      <!-- Contact CTA -->
-      <section class="about-section about-cta panel">
-        <h2 class="cta-title">Tip the Desk</h2>
-        <p class="cta-desc">Got a security disclosure, leaked document, or story tip? We protect sources and take disclosures seriously.</p>
+      <section class="about-cta panel about-section">
+        <h2 class="cta-title">Get in Touch</h2>
+        <p class="cta-desc">Have a tip, a correction, or a story idea? We read every message from our readers.</p>
         <div class="cta-actions">
-          <a href="/contact" class="btn btn-neon">Contact the Team</a>
+          <a href="/contact" class="btn btn-primary">Contact the Team</a>
           <a href="/rss.xml" class="btn btn-outline">Subscribe via RSS</a>
         </div>
       </section>
@@ -157,198 +188,38 @@ const standards = [
 </BaseLayout>
 
 <style>
-  .about-hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border2);
-    padding: 4rem 0 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .about-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--neon);
-  }
-
-  .mono-tag {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--neon);
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .about-title {
-    font-family: var(--display);
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 900;
-    line-height: 1.1;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  .about-subtitle {
-    color: var(--dim);
-    font-size: 1.1rem;
-    max-width: 600px;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .about-section {
-    padding: 3rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .about-hero { background: var(--surface); border-bottom: 1px solid var(--border); padding: 4rem 0 3rem; }
+  .about-eyebrow { font-family: var(--ui); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 1rem; }
+  .about-title { font-family: var(--display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1rem; }
+  .about-subtitle { color: var(--dim); font-size: 1.1rem; max-width: 600px; line-height: 1.6; margin: 0; }
+  .about-section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
   .about-section:last-child { border-bottom: none; }
-
-  .mission-block {
-    padding: 2rem;
-  }
-
-  .mission-text {
-    color: var(--text);
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 1rem;
-  }
-
-  .mission-stats {
-    display: flex;
-    gap: 3rem;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border2);
-    flex-wrap: wrap;
-  }
-
-  .mission-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .mission-stat-val {
-    font-family: var(--display);
-    font-size: 1.75rem;
-    font-weight: 900;
-    color: var(--cyan);
-  }
-
-  .mission-stat-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-
-  .coverage-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-
-  .coverage-card {
-    padding: 1.75rem;
-    border: none;
-    border-radius: 0;
-  }
-
-  .coverage-icon {
-    font-size: 1.5rem;
-    display: block;
-    margin-bottom: 0.75rem;
-  }
-
-  .coverage-title {
-    font-family: var(--display);
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-  }
-
-  .coverage-desc {
-    color: var(--dim);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .standards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-
-  .standard-item {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .standard-marker {
-    color: var(--neon);
-    font-size: 0.75rem;
-    padding-top: 0.2rem;
-    flex-shrink: 0;
-  }
-
-  .standard-title {
-    font-family: var(--display);
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-  }
-
-  .standard-desc {
-    color: var(--dim);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .about-cta {
-    padding: 2.5rem;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .cta-title {
-    font-family: var(--display);
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--neon);
-    margin-bottom: 0.75rem;
-  }
-
-  .cta-desc {
-    color: var(--dim);
-    font-size: 1rem;
-    max-width: 500px;
-    margin: 0 auto 1.5rem;
-  }
-
-  .cta-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 900px) {
-    .coverage-grid { grid-template-columns: repeat(2, 1fr); }
-    .standards-grid { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 600px) {
-    .coverage-grid { grid-template-columns: 1fr; }
-  }
+  .mission-block { padding: 2rem; }
+  .mission-text { color: var(--text); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; }
+  .mission-stats { display: flex; gap: 3rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .mission-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+  .mission-stat-val { font-family: var(--display); font-size: 1.75rem; font-weight: 700; color: var(--accent); }
+  .mission-stat-label { font-family: var(--ui); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+  .coverage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .coverage-card { padding: 1.75rem; border: none; border-radius: 0; }
+  .coverage-icon { font-size: 1.5rem; display: block; margin-bottom: 0.75rem; }
+  .coverage-title { font-family: var(--display); font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .coverage-desc { color: var(--dim); font-size: 0.875rem; line-height: 1.5; margin: 0; }
+  .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .team-card { padding: 2rem; }
+  .team-avatar { font-size: 2rem; color: var(--accent); margin-bottom: 1rem; display: block; }
+  .team-name { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+  .team-role { font-family: var(--ui); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  .team-bio { color: var(--dim); font-size: 0.875rem; line-height: 1.6; margin: 0; }
+  .standards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .standard-item { display: flex; gap: 1rem; }
+  .standard-marker { color: var(--accent); font-size: 0.75rem; padding-top: 0.2rem; flex-shrink: 0; }
+  .standard-title { font-family: var(--display); font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .standard-desc { color: var(--dim); font-size: 0.875rem; line-height: 1.5; margin: 0; }
+  .about-cta { padding: 2.5rem; text-align: center; margin-bottom: 2rem; }
+  .cta-title { font-family: var(--display); font-size: 1.5rem; font-weight: 700; color: var(--accent); margin-bottom: 0.75rem; }
+  .cta-desc { color: var(--dim); font-size: 1rem; max-width: 500px; margin: 0 auto 1.5rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 900px) { .coverage-grid { grid-template-columns: repeat(2, 1fr); } .standards-grid { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .coverage-grid { grid-template-columns: 1fr; } }
 </style>

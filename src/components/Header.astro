@@ -5,11 +5,11 @@ const today = new Date().toLocaleDateString('en-US', {
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Our Articles', href: '/news' },
-  { label: 'Tech', href: '/news/tech' },
-  { label: 'Business', href: '/news/business' },
-  { label: 'Science', href: '/news/science' },
-  { label: 'World', href: '/news/world' },
+  { label: 'Analysis', href: '/news' },
+  { label: 'Geopolitics', href: '/news/geopolitics' },
+  { label: 'Economics', href: '/news/economics' },
+  { label: 'Technology', href: '/news/tech' },
+  { label: 'Climate', href: '/news/climate' },
 ];
 ---
 
@@ -17,22 +17,16 @@ const navItems = [
 
 <header class="site-header">
   <div class="container">
-
-    <!-- Utility bar: date + coverage areas -->
     <div class="header-utility">
       <span class="header-date">{today}</span>
-      <span class="header-beats">Technology · Business · Science · World · AI</span>
+      <span class="header-beats">Geopolitics · Economics · Technology · Climate · Demographics</span>
     </div>
-
-    <!-- Double rule + Masthead -->
     <div class="masthead-rule masthead-rule--top"></div>
     <div class="masthead">
-      <a href="/" class="masthead-wordmark">Demo News Aggregator</a>
-      <p class="masthead-tagline">Original analysis · 24 sources · Independent perspective</p>
+      <a href="/" class="masthead-wordmark">Zylvion</a>
+      <p class="masthead-tagline">Trends · Strategy · The Long Arc</p>
     </div>
     <div class="masthead-rule masthead-rule--bottom"></div>
-
-    <!-- Navigation -->
     <nav class="main-nav" aria-label="Main navigation">
       <ul class="nav-list">
         {navItems.map(item => (
@@ -43,191 +37,40 @@ const navItems = [
         <span></span><span></span><span></span>
       </button>
     </nav>
-
-    <!-- Mobile menu -->
     <div class="mobile-menu" id="mobile-menu" hidden>
       {navItems.map(item => (
         <a href={item.href} class="mobile-link">{item.label}</a>
       ))}
     </div>
-
   </div>
 </header>
 
 <style>
-  .site-header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  /* Utility bar */
-  .header-utility {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.45rem 0;
-    border-bottom: 1px solid var(--border);
-    gap: 1rem;
-  }
-
-  .header-date {
-    font-family: var(--ui);
-    font-size: 0.62rem;
-    color: var(--dim);
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-  }
-
-  .header-beats {
-    font-family: var(--ui);
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  /* Double-rule masthead */
-  .masthead-rule {
-    height: 1px;
-    background: var(--text);
-  }
-  .masthead-rule--top {
-    margin-top: 0.75rem;
-    border-top: 2px solid var(--text);
-    height: 3px;
-    background: transparent;
-    border-bottom: 1px solid var(--text);
-  }
-  .masthead-rule--bottom {
-    border-top: 2px solid var(--text);
-    height: 3px;
-    background: transparent;
-    border-bottom: 1px solid var(--text);
-    margin-bottom: 0;
-  }
-
-  /* Masthead wordmark */
-  .masthead {
-    text-align: center;
-    padding: 0.6rem 0 0.5rem;
-  }
-
-  .masthead-wordmark {
-    display: block;
-    font-family: var(--display);
-    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text);
-    text-decoration: none;
-    line-height: 1;
-  }
+  .site-header { background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+  .header-utility { display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0; border-bottom: 1px solid var(--border); gap: 1rem; }
+  .header-date { font-family: var(--ui); font-size: 0.62rem; color: var(--dim); letter-spacing: 0.02em; white-space: nowrap; }
+  .header-beats { font-family: var(--ui); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .masthead-rule { height: 1px; background: var(--text); }
+  .masthead-rule--top { margin-top: 0.75rem; border-top: 2px solid var(--text); height: 3px; background: transparent; border-bottom: 1px solid var(--text); }
+  .masthead-rule--bottom { border-top: 2px solid var(--text); height: 3px; background: transparent; border-bottom: 1px solid var(--text); margin-bottom: 0; }
+  .masthead { text-align: center; padding: 0.6rem 0 0.5rem; }
+  .masthead-wordmark { display: block; font-family: var(--display); font-size: clamp(1.4rem, 3.5vw, 2.4rem); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); text-decoration: none; line-height: 1; }
   .masthead-wordmark:hover { color: var(--accent); }
-
-  .masthead-tagline {
-    font-family: var(--ui);
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-top: 0.3rem;
-  }
-
-  /* Navigation */
-  .main-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.55rem 0;
-    position: relative;
-  }
-
-  .nav-list {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .nav-link {
-    display: block;
-    font-family: var(--ui);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--dim);
-    padding: 0.25rem 0.85rem;
-    border-right: 1px solid var(--border);
-    text-decoration: none;
-    transition: color 0.15s;
-    white-space: nowrap;
-  }
+  .masthead-tagline { font-family: var(--ui); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-top: 0.3rem; }
+  .main-nav { display: flex; align-items: center; justify-content: center; padding: 0.55rem 0; position: relative; }
+  .nav-list { display: flex; align-items: center; gap: 0; list-style: none; margin: 0; padding: 0; }
+  .nav-link { display: block; font-family: var(--ui); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); padding: 0.25rem 0.85rem; border-right: 1px solid var(--border); text-decoration: none; transition: color 0.15s; white-space: nowrap; }
   .nav-list li:first-child .nav-link { border-left: 1px solid var(--border); }
   .nav-link:hover { color: var(--accent); }
-
-  /* Hamburger */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    background: none;
-    border: 1px solid var(--border);
-    padding: 0.4rem 0.5rem;
-    cursor: pointer;
-    position: absolute;
-    right: 0;
-  }
-  .hamburger span {
-    display: block;
-    width: 18px;
-    height: 1.5px;
-    background: var(--text);
-    transition: background 0.15s;
-  }
+  .hamburger { display: none; flex-direction: column; justify-content: center; gap: 4px; background: none; border: 1px solid var(--border); padding: 0.4rem 0.5rem; cursor: pointer; position: absolute; right: 0; }
+  .hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text); transition: background 0.15s; }
   .hamburger:hover span { background: var(--accent); }
-
-  /* Mobile menu */
-  .mobile-menu {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--border);
-    padding: 0.75rem 0;
-  }
+  .mobile-menu { display: flex; flex-direction: column; border-top: 1px solid var(--border); padding: 0.75rem 0; }
   .mobile-menu[hidden] { display: none; }
-
-  .mobile-link {
-    font-family: var(--ui);
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--dim);
-    padding: 0.55rem 0;
-    border-bottom: 1px solid var(--border);
-    text-decoration: none;
-  }
+  .mobile-link { font-family: var(--ui); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dim); padding: 0.55rem 0; border-bottom: 1px solid var(--border); text-decoration: none; }
   .mobile-link:hover { color: var(--accent); }
-
-  /* Responsive */
-  @media (max-width: 860px) {
-    .nav-list { display: none; }
-    .hamburger { display: flex; }
-    .header-beats { display: none; }
-  }
-
-  @media (max-width: 480px) {
-    .masthead-tagline { display: none; }
-  }
+  @media (max-width: 860px) { .nav-list { display: none; } .hamburger { display: flex; } .header-beats { display: none; } }
+  @media (max-width: 480px) { .masthead-tagline { display: none; } }
 </style>
 
 <script>

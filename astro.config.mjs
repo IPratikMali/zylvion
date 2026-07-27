@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://demonewsaggregator.com',
+  site: 'https://zylvion.xyz',
   output: 'static',
   trailingSlash: 'never',
   integrations: [

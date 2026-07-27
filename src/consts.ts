@@ -1,3 +1,3 @@
-export const SITE_TITLE = 'Demo News Aggregator';
-export const SITE_DESCRIPTION = 'Original analysis and reporting across technology, business, science and world affairs — drawn from 24 independent sources and written with a fresh editorial angle.';
-export const SITE_URL = 'https://demonewsaggregator.com';
+export const SITE_TITLE = 'Zylvion';
+export const SITE_DESCRIPTION = 'Zylvion situates today’s news inside the longer arcs of history, policy, and structural change — written for readers who think in decades.';
+export const SITE_URL = 'https://zylvion.xyz';

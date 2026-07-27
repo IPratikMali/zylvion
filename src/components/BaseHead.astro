@@ -20,7 +20,7 @@ const {
   type = 'website',
   pubDate,
   updatedDate,
-  author = 'Demo News Aggregator Editorial Team',
+  author = 'Zylvion Editorial Team',
   tags = [],
 } = Astro.props;
 
@@ -29,23 +29,20 @@ const canonicalURL = typeof rawCanonical === 'string'
   ? rawCanonical.replace(/\/$/, '') || '/'
   : new URL(rawCanonical.pathname.replace(/\/$/, '') || '/', Astro.site);
 const ogImage = new URL(image, Astro.site);
-const SITE_NAME = 'Demo News Aggregator';
-const SITE_URL = 'https://demonewsaggregator.com';
+const SITE_NAME = 'Zylvion';
+const SITE_URL = 'https://zylvion.xyz';
 const fullTitle = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
 
 const breadcrumbs = [
   { name: 'Home', url: SITE_URL },
-  ...(type === 'article' ? [{ name: 'News', url: `${SITE_URL}/blog` }, { name: title, url: canonicalURL.toString() }] : []),
+  ...(type === 'article' ? [{ name: 'News', url: `${SITE_URL}/news` }, { name: title, url: canonicalURL.toString() }] : []),
 ];
 ---
-
-<!-- Google Search Console -->
-<meta name="google-site-verification" content="fOsXnx9ldA5QK9kZ0-BhjFbW3_HQL_w2GmkKPOHBw4M" />
 
 <!-- Charset & Viewport -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="color-scheme" content="dark" />
+<meta name="color-scheme" content="light" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
 <!-- Primary Meta -->
@@ -58,11 +55,9 @@ const breadcrumbs = [
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-<!-- Sitemap -->
+<!-- Sitemap & RSS -->
 <link rel="sitemap" href="/sitemap-index.xml" />
-
-<!-- RSS -->
-<link rel="alternate" type="application/rss+xml" title="Demo News Aggregator RSS" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="Zylvion RSS" href="/rss.xml" />
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />
@@ -81,28 +76,23 @@ const breadcrumbs = [
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@demonewsagg" />
-<meta name="twitter:creator" content="@demonewsagg" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 
-<!-- JSON-LD: Organization (always present) -->
+<!-- JSON-LD: Organization -->
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "NewsMediaOrganization",
   "name": SITE_NAME,
   "url": SITE_URL,
-  "logo": {
-    "@type": "ImageObject",
-    "url": `${SITE_URL}/favicon.svg`
-  },
-  "sameAs": [
-    "https://twitter.com/techaudit_in"
-  ]
+  "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.svg` },
+  "description": "Zylvion situates today's news inside the longer arcs of history, policy, and structural change — written for readers who think in decades.",
+  "publishingPrinciples": `${SITE_URL}/about`,
+  "foundingDate": "2024"
 })} />
 
-<!-- JSON-LD: WebSite with SearchAction -->
+<!-- JSON-LD: WebSite -->
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -111,7 +101,7 @@ const breadcrumbs = [
   "url": SITE_URL,
   "potentialAction": {
     "@type": "SearchAction",
-    "target": `${SITE_URL}/blog?q={search_term_string}`,
+    "target": `${SITE_URL}/news?q={search_term_string}`,
     "query-input": "required name=search_term_string"
   }
 })} />
@@ -135,34 +125,19 @@ const breadcrumbs = [
     "@type": "NewsArticle",
     "headline": title,
     "description": description,
-    "image": {
-      "@type": "ImageObject",
-      "url": ogImage.toString(),
-      "width": 1200,
-      "height": 630
-    },
+    "image": { "@type": "ImageObject", "url": ogImage.toString(), "width": 1200, "height": 630 },
     "datePublished": pubDate?.toISOString(),
     "dateModified": (updatedDate ?? pubDate)?.toISOString(),
-    "author": {
-      "@type": "Person",
-      "name": author,
-      "url": SITE_URL
-    },
+    "author": { "@type": "Person", "name": author, "url": SITE_URL },
     "publisher": {
-      "@type": "Organization",
+      "@type": "NewsMediaOrganization",
       "name": SITE_NAME,
       "url": SITE_URL,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${SITE_URL}/favicon.svg`
-      }
+      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.svg` }
     },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": canonicalURL.toString()
-    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalURL.toString() },
     "keywords": tags.join(', '),
-    "articleSection": tags[0] ?? "Tech"
+    "articleSection": tags[0] ?? "News"
   })} />
 )}
 

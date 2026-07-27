@@ -5,237 +5,128 @@ import { SITE_TITLE } from '../consts';
 
 <BaseLayout
   title={`Contact — ${SITE_TITLE}`}
-  description="Contact TechAudit — submit tips, press inquiries, or subscribe to the Signal newsletter."
+  description={`Contact the ${SITE_TITLE} editorial team. Submit a story tip, request a correction, or get in touch with our journalists.`}
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": `Contact — ${SITE_TITLE}`,
+    "url": "https://zylvion.xyz/contact",
+    "description": "Contact the Zylvion editorial team",
+    "publisher": { "@type": "NewsMediaOrganization", "name": "Zylvion", "url": "https://zylvion.xyz" }
+  })} />
+
   <div class="contact-page">
     <div class="contact-hero">
       <div class="container">
-        <span class="mono-tag">// CONTACT</span>
-        <h1 class="contact-title">Reach the Desk</h1>
-        <p class="contact-subtitle">Tips, press inquiries, story pitches, and security disclosures.</p>
+        <h1 class="contact-title">Contact Zylvion</h1>
+        <p class="contact-subtitle">Story tips, corrections, press enquiries, and reader feedback — we read everything.</p>
       </div>
     </div>
 
-    <div class="container contact-body">
+    <div class="container">
       <div class="contact-grid">
-        <!-- Form -->
-        <div class="contact-form-col">
-          <div class="panel form-panel">
-            <h2 class="form-section-title">Send a Message</h2>
-            <form class="contact-form" name="contact" method="POST" action="/contact/?success=true">
-              <div class="form-group">
-                <label class="form-label" for="name">Name</label>
-                <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required />
-              </div>
 
-              <div class="form-group">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com" required />
-              </div>
+        <div class="contact-form-wrap">
+          <h2 class="contact-section-title">Send a Message</h2>
+          <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contact" />
+            <p hidden><label>Do not fill this: <input name="bot-field" /></label></p>
 
-              <div class="form-group">
-                <label class="form-label" for="subject">Subject</label>
-                <select class="form-input form-select" id="subject" name="subject">
-                  <option value="tip">News Tip</option>
-                  <option value="security">Security Disclosure</option>
-                  <option value="press">Press Inquiry</option>
-                  <option value="newsletter">Newsletter Subscription</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="name" class="form-label">Your name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" required class="form-input" placeholder="Jane Smith" autocomplete="name" />
+            </div>
 
-              <div class="form-group">
-                <label class="form-label" for="message">Message</label>
-                <textarea class="form-input form-textarea" id="message" name="message" placeholder="Describe your inquiry…" required></textarea>
-              </div>
+            <div class="form-group">
+              <label for="email" class="form-label">Email address <span class="required">*</span></label>
+              <input type="email" id="email" name="email" required class="form-input" placeholder="jane@example.com" autocomplete="email" />
+            </div>
 
-              <button type="submit" class="btn btn-neon submit-btn">Send Message</button>
-            </form>
-          </div>
+            <div class="form-group">
+              <label for="subject" class="form-label">Subject <span class="required">*</span></label>
+              <select id="subject" name="subject" required class="form-input">
+                <option value="">Select a reason for contact</option>
+                <option value="tip">Story tip or lead</option>
+                <option value="correction">Correction request</option>
+                <option value="press">Press or partnership enquiry</option>
+                <option value="feedback">Reader feedback</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">Message <span class="required">*</span></label>
+              <textarea id="message" name="message" required class="form-input form-textarea" rows="6" placeholder="Tell us what you’d like to share or ask..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary form-submit">Send message</button>
+          </form>
         </div>
 
-        <!-- Info -->
-        <div class="contact-info-col">
-          <div class="info-card panel">
-            <h3 class="info-card-title">Security Disclosures</h3>
-            <p class="info-card-body">For responsible disclosure of vulnerabilities affecting covered companies or infrastructure, use the contact form with subject "Security Disclosure". We respond within 24 hours.</p>
-            <div class="info-badge">
-              <span class="category-badge security">CONFIDENTIAL</span>
+        <aside class="contact-info">
+          <h2 class="contact-section-title">How We Can Help</h2>
+
+          <div class="contact-reason">
+            <div class="contact-reason-icon">📰</div>
+            <div>
+              <h3 class="contact-reason-title">Story Tips</h3>
+              <p class="contact-reason-desc">Have information we should investigate? We protect source confidentiality and take all tips seriously, whether on or off record.</p>
             </div>
           </div>
 
-          <div class="info-card panel">
-            <h3 class="info-card-title">The Signal Newsletter</h3>
-            <p class="info-card-body">Daily digest of critical tech and security intelligence. Free. No spam. Unsubscribe any time. Select "Newsletter Subscription" in the form.</p>
-            <div class="info-badge">
-              <span class="live-badge">
-                <span class="live-dot"></span>
-                DAILY EDITION
-              </span>
+          <div class="contact-reason">
+            <div class="contact-reason-icon">✏️</div>
+            <div>
+              <h3 class="contact-reason-title">Corrections</h3>
+              <p class="contact-reason-desc">Found a factual error? We appreciate the notification. Corrections are published promptly with clear disclosure.</p>
             </div>
           </div>
 
-          <div class="info-card panel">
-            <h3 class="info-card-title">Press & Media</h3>
-            <p class="info-card-body">For press inquiries, interview requests, or partnership discussions, use the form with subject "Press Inquiry".</p>
-          </div>
-
-          <div class="info-card panel collab-card">
-            <h3 class="info-card-title">Collaborations & Sponsored Posts</h3>
-            <p class="info-card-body">Interested in partnering with us, sponsored content, or brand collaborations? Reach out directly:</p>
-            <a href="mailto:pratikm.marketing@gmail.com" class="collab-email">pratikm.marketing@gmail.com</a>
-          </div>
-
-          <div class="info-card panel">
-            <h3 class="info-card-title">Follow Live</h3>
-            <div class="social-links">
-              <a href="https://twitter.com/techaudit_in" target="_blank" rel="noopener noreferrer" class="social-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-                @techaudit_in
-              </a>
-              <a href="/rss.xml" class="social-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
-                </svg>
-                RSS Feed
-              </a>
+          <div class="contact-reason">
+            <div class="contact-reason-icon">📬</div>
+            <div>
+              <h3 class="contact-reason-title">Press Enquiries</h3>
+              <p class="contact-reason-desc">Media requests, partnership discussions, and syndication enquiries are welcome. Please describe your organisation in your message.</p>
             </div>
           </div>
-        </div>
+
+          <div class="contact-reason">
+            <div class="contact-reason-icon">💬</div>
+            <div>
+              <h3 class="contact-reason-title">Reader Feedback</h3>
+              <p class="contact-reason-desc">We value reader input on our coverage, focus areas, and editorial decisions. Every message is read by our editorial team.</p>
+            </div>
+          </div>
+
+          <div class="contact-note">
+            <p>We aim to respond to all messages within <strong>3 business days</strong>. For urgent tips, please indicate this clearly in your subject line.</p>
+          </div>
+        </aside>
+
       </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .contact-hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border2);
-    padding: 4rem 0 3rem;
-    position: relative;
-  }
-
-  .contact-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--neon);
-  }
-
-  .mono-tag {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--neon);
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .contact-title {
-    font-family: var(--display);
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 900;
-    color: var(--neon);
-    margin-bottom: 0.75rem;
-  }
-
-  .contact-subtitle {
-    color: var(--dim);
-    font-size: 1rem;
-    margin: 0;
-  }
-
-  .contact-body {
-    padding-top: 3rem;
-    padding-bottom: 4rem;
-  }
-
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 3rem;
-  }
-
-  .form-panel {
-    padding: 2rem;
-  }
-
-  .form-section-title {
-    font-family: var(--display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--cyan);
-    margin-bottom: 1.5rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-  }
-
-  .submit-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .info-card {
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .info-card-title {
-    font-family: var(--display);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    margin-bottom: 0.75rem;
-  }
-
-  .info-card-body {
-    color: var(--dim);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-  }
-
-  .info-badge { margin-top: 0.5rem; }
-
-  .social-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
-
-  .social-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--dim);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .social-link:hover { color: var(--cyan); }
-
-  .collab-card { border-color: var(--cyan); }
-
-  .collab-email {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    color: var(--cyan);
-    border-bottom: 1px solid rgba(0,229,255,0.3);
-    margin-top: 0.5rem;
-    word-break: break-all;
-  }
-  .collab-email:hover { color: var(--neon); border-bottom-color: var(--neon); }
-
-  @media (max-width: 900px) {
-    .contact-grid { grid-template-columns: 1fr; }
-  }
+  .contact-hero { background: var(--surface); border-bottom: 1px solid var(--border); padding: 3rem 0 2.5rem; }
+  .contact-title { font-family: var(--display); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .contact-subtitle { font-family: var(--ui); font-size: 1rem; color: var(--dim); max-width: 500px; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; padding: 3rem 0 5rem; align-items: start; }
+  .contact-section-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { display: block; font-family: var(--ui); font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+  .required { color: var(--red); }
+  .form-input { width: 100%; font-family: var(--ui); font-size: 0.9rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 0.85rem; outline: none; transition: border-color 0.15s; appearance: none; }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--muted); }
+  .form-textarea { resize: vertical; min-height: 140px; }
+  .form-submit { width: 100%; justify-content: center; padding: 0.75rem; margin-top: 0.5rem; }
+  .contact-reason { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+  .contact-reason-icon { font-size: 1.25rem; flex-shrink: 0; }
+  .contact-reason-title { font-family: var(--display); font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+  .contact-reason-desc { font-family: var(--ui); font-size: 0.82rem; color: var(--dim); line-height: 1.55; margin: 0; }
+  .contact-note { background: var(--surface); border: 1px solid var(--border); padding: 1rem 1.25rem; margin-top: 1rem; font-family: var(--ui); font-size: 0.82rem; color: var(--dim); line-height: 1.55; }
+  @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } }
 </style>
