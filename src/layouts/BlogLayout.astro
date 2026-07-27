@@ -1,0 +1,175 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author?: string;
+  tags?: string[];
+  coverImage?: string;
+}
+
+const { title, description, pubDate, updatedDate, author = 'TechAudit Editorial Team', tags = [], coverImage } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={coverImage}
+  type="article"
+  pubDate={pubDate}
+  author={author}
+  tags={tags}
+>
+  <article class="blog-post container">
+    <header class="post-header">
+      <div class="post-meta-top">
+        {tags.length > 0 && (
+          <div class="post-tags">
+            {tags.map(tag => (
+              <a href={`/blog/?cat=${tag.toLowerCase()}`} class={`category-badge ${tag.toLowerCase()}`}>{tag}</a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <h1 class="post-title">{title}</h1>
+      <p class="post-description">{description}</p>
+
+      <div class="post-meta">
+        <span class="post-author">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5">
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          </svg>
+          {author}
+        </span>
+        <span class="post-date">
+          <FormattedDate date={pubDate} />
+        </span>
+        {updatedDate && updatedDate > pubDate && (
+          <span class="post-updated">
+            Updated: <FormattedDate date={updatedDate} />
+          </span>
+        )}
+      </div>
+    </header>
+
+    {coverImage && (
+      <div class="post-cover">
+        <img src={coverImage} alt={title} loading="lazy" />
+      </div>
+    )}
+
+    <div class="post-content prose">
+      <slot />
+    </div>
+
+    <footer class="post-footer">
+      <div class="post-footer-tags">
+        {tags.map(tag => (
+          <a href={`/blog/?cat=${tag.toLowerCase()}`} class={`category-badge ${tag.toLowerCase()}`}>{tag}</a>
+        ))}
+      </div>
+      <a href="/blog" class="btn btn-outline">← Back to News</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    padding: 3rem 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .post-meta-top {
+    margin-bottom: 1rem;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .post-title {
+    font-family: var(--display);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #EEEEFF;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .post-description {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(210,210,255,0.75);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: rgba(180,180,220,0.6);
+  }
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--cyan);
+  }
+
+  .post-updated {
+    color: var(--yellow);
+  }
+
+  .post-cover {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border2);
+    overflow: hidden;
+  }
+
+  .post-cover img {
+    width: 100%;
+    display: block;
+  }
+
+  .post-content {
+    margin-bottom: 3rem;
+  }
+
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border2);
+  }
+
+  .post-footer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

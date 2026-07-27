@@ -1,0 +1,366 @@
+---
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+
+// ── Read sitemap URLs from CSV at build time ──────────────────────────────────
+const csvPath = join(process.cwd(), 'data/urls_discovered.csv');
+let sitemapCards: { url: string; source: string; discovered_at: string; image: string }[] = [];
+
+try {
+  const lines = readFileSync(csvPath, 'utf8').trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim());
+  const iUrl = headers.indexOf('url');
+  const iSrc = headers.indexOf('source');
+  const iDat = headers.indexOf('discovered_at');
+  const iImg = headers.indexOf('image');
+  for (let i = lines.length - 1; i >= 1; i--) {
+    const cols = lines[i].split(',');
+    const url = cols[iUrl]?.trim();
+    const source = cols[iSrc]?.trim();
+    if (url && source && url.startsWith('http')) {
+      sitemapCards.push({
+        url,
+        source,
+        discovered_at: (cols[iDat] || '').trim(),
+        image: iImg >= 0 ? (cols[iImg] || '').trim() : '',
+      });
+    }
+    if (sitemapCards.length >= 500) break;
+  }
+} catch {
+  // CSV not yet generated
+}
+
+const sources = [...new Set(sitemapCards.map(c => c.source))].sort();
+const cardsJson = JSON.stringify(sitemapCards);
+
+// ── Our generated news articles ───────────────────────────────────────────────
+const newsArticles = await getCollection('news', ({ data }) => !data.draft);
+const latestNews = newsArticles
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+
+  <!-- Page header -->
+  <section class="page-header">
+    <div class="container">
+      <div class="page-header-inner">
+        <div>
+          <h1 class="page-title">Live Intelligence Feed</h1>
+          <p class="page-subtitle">{sitemapCards.length.toLocaleString()} URLs indexed &middot; {sources.length} sources &middot; updated continuously</p>
+        </div>
+        <a href="/news" class="btn btn-outline">Read our articles &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our generated articles strip -->
+  {latestNews.length > 0 && (
+    <section class="our-articles">
+      <div class="container">
+        <div class="section-hed">
+          <span class="section-hed-label">Our Analysis</span>
+          <a href="/news" class="section-hed-link">View all articles &rarr;</a>
+        </div>
+        <div class="our-grid">
+          {latestNews.map(article => {
+            const parts = article.id.split('/');
+            const slug = parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+            const category = parts[parts.length - 2] || article.data.category;
+            return (
+              <a href={`/news/${category}/${slug}`} class="our-card">
+                <span class="our-card-cat">{category}</span>
+                <h3 class="our-card-title">{article.data.title}</h3>
+                <p class="our-card-desc">{article.data.description?.slice(0, 110)}{(article.data.description?.length ?? 0) > 110 ? '…' : ''}</p>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-inner">
+        <div class="source-filters" id="source-filters">
+          <button class="filter-btn active" data-source="all">All sources</button>
+          {sources.map(src => (
+            <button class="filter-btn" data-source={src}>{src}</button>
+          ))}
+        </div>
+        <input type="search" id="search-input" placeholder="Search feed&hellip;" class="search-input" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Sitemap URL Cards -->
+  <section class="feed-section">
+    <div class="container">
+      {sitemapCards.length === 0 ? (
+        <div class="empty-state">
+          <p>No URLs discovered yet. Run the discover workflow to populate the feed.</p>
+        </div>
+      ) : (
+        <>
+          <div id="cards-grid" class="cards-grid"></div>
+          <div id="load-more-wrap" class="load-more-wrap hidden">
+            <button id="load-more-btn" class="btn btn-outline">Load more</button>
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script type="application/json" id="cards-data" set:html={cardsJson}></script>
+
+<style>
+  /* Page header */
+  .page-header {
+    padding: 1.75rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.25rem;
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-family: var(--ui);
+    font-size: 0.72rem;
+    color: var(--dim);
+    margin: 0;
+  }
+
+  /* Our articles strip */
+  .our-articles { padding: 2rem 0; border-bottom: 1px solid var(--border); }
+
+  .our-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .our-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--bg);
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .our-card:hover { background: var(--surface); }
+
+  .our-card-cat {
+    font-family: var(--ui);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .our-card-title {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .our-card:hover .our-card-title { color: var(--accent); }
+  .our-card-desc {
+    font-family: var(--ui);
+    font-size: 0.75rem;
+    color: var(--dim);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 95%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 0;
+  }
+  .filter-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .source-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+  .filter-btn {
+    font-family: var(--ui);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 0.28rem 0.6rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-tint);
+  }
+  .search-input {
+    font-family: var(--ui);
+    font-size: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.38rem 0.75rem;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* Feed section */
+  .feed-section { padding: 2rem 0; min-height: 60vh; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .load-more-wrap { text-align: center; padding: 2rem 0; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    .page-header-inner { flex-direction: column; align-items: flex-start; }
+    .search-input { width: 130px; }
+  }
+</style>
+
+<script>
+  interface Card { url: string; source: string; discovered_at: string; image: string; }
+
+  const raw = document.getElementById('cards-data')?.textContent ?? '[]';
+  let allCards: Card[] = JSON.parse(raw);
+  let filtered: Card[] = [...allCards];
+  let displayed = 0;
+  const PAGE_SIZE = 60;
+  let currentSource = 'all';
+  let searchQuery = '';
+
+  function relativeTime(dateStr: string): string {
+    if (!dateStr) return '';
+    try {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const h = Math.floor(diff / 3600000);
+      if (h < 1) return 'just now';
+      if (h < 24) return `${h}h ago`;
+      const d = Math.floor(h / 24);
+      return d < 7 ? `${d}d ago` : new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch { return ''; }
+  }
+
+  function slugToTitle(url: string): string {
+    try {
+      const path = new URL(url).pathname.replace(/\/$/, '');
+      const seg = path.split('/').filter(Boolean).pop() || '';
+      return seg.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    } catch { return url; }
+  }
+
+  function cardHTML(c: Card): string {
+    const title = slugToTitle(c.url);
+    const time = relativeTime(c.discovered_at);
+    const img = c.image ? `<div class="nc-img-wrap"><img src="${c.image}" alt="" class="nc-img" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'"></div>` : '';
+    return `
+      <a href="${c.url}" target="_blank" rel="nofollow noopener noreferrer" class="news-card${c.image ? ' has-img' : ''}">
+        ${img}
+        <div class="nc-body">
+          <div class="nc-header">
+            <span class="nc-source">${c.source}</span>
+            <span class="nc-via">sitemap</span>
+          </div>
+          <div class="nc-title">${title}</div>
+          ${time ? `<div class="nc-time">${time}</div>` : ''}
+        </div>
+      </a>
+    `;
+  }
+
+  function applyFilters() {
+    filtered = allCards.filter(c => {
+      const matchSource = currentSource === 'all' || c.source === currentSource;
+      const q = searchQuery.toLowerCase();
+      const matchSearch = !q || c.url.toLowerCase().includes(q) || c.source.toLowerCase().includes(q);
+      return matchSource && matchSearch;
+    });
+    displayed = 0;
+    const grid = document.getElementById('cards-grid');
+    if (grid) grid.innerHTML = '';
+    showMore();
+  }
+
+  function showMore() {
+    const grid = document.getElementById('cards-grid');
+    if (!grid) return;
+    const batch = filtered.slice(displayed, displayed + PAGE_SIZE);
+    grid.insertAdjacentHTML('beforeend', batch.map(cardHTML).join(''));
+    displayed += batch.length;
+    const wrap = document.getElementById('load-more-wrap');
+    if (wrap) wrap.classList.toggle('hidden', displayed >= filtered.length);
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSource = (btn as HTMLButtonElement).dataset.source ?? 'all';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  document.getElementById('load-more-btn')?.addEventListener('click', showMore);
+  document.getElementById('search-input')?.addEventListener('input', e => {
+    searchQuery = (e.target as HTMLInputElement).value;
+    applyFilters();
+  });
+
+  applyFilters();
+</script>

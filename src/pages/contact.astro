@@ -1,0 +1,241 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<BaseLayout
+  title={`Contact — ${SITE_TITLE}`}
+  description="Contact TechAudit — submit tips, press inquiries, or subscribe to the Signal newsletter."
+>
+  <div class="contact-page">
+    <div class="contact-hero">
+      <div class="container">
+        <span class="mono-tag">// CONTACT</span>
+        <h1 class="contact-title">Reach the Desk</h1>
+        <p class="contact-subtitle">Tips, press inquiries, story pitches, and security disclosures.</p>
+      </div>
+    </div>
+
+    <div class="container contact-body">
+      <div class="contact-grid">
+        <!-- Form -->
+        <div class="contact-form-col">
+          <div class="panel form-panel">
+            <h2 class="form-section-title">Send a Message</h2>
+            <form class="contact-form" name="contact" method="POST" action="/contact/?success=true">
+              <div class="form-group">
+                <label class="form-label" for="name">Name</label>
+                <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="subject">Subject</label>
+                <select class="form-input form-select" id="subject" name="subject">
+                  <option value="tip">News Tip</option>
+                  <option value="security">Security Disclosure</option>
+                  <option value="press">Press Inquiry</option>
+                  <option value="newsletter">Newsletter Subscription</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="message">Message</label>
+                <textarea class="form-input form-textarea" id="message" name="message" placeholder="Describe your inquiry…" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-neon submit-btn">Send Message</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="contact-info-col">
+          <div class="info-card panel">
+            <h3 class="info-card-title">Security Disclosures</h3>
+            <p class="info-card-body">For responsible disclosure of vulnerabilities affecting covered companies or infrastructure, use the contact form with subject "Security Disclosure". We respond within 24 hours.</p>
+            <div class="info-badge">
+              <span class="category-badge security">CONFIDENTIAL</span>
+            </div>
+          </div>
+
+          <div class="info-card panel">
+            <h3 class="info-card-title">The Signal Newsletter</h3>
+            <p class="info-card-body">Daily digest of critical tech and security intelligence. Free. No spam. Unsubscribe any time. Select "Newsletter Subscription" in the form.</p>
+            <div class="info-badge">
+              <span class="live-badge">
+                <span class="live-dot"></span>
+                DAILY EDITION
+              </span>
+            </div>
+          </div>
+
+          <div class="info-card panel">
+            <h3 class="info-card-title">Press & Media</h3>
+            <p class="info-card-body">For press inquiries, interview requests, or partnership discussions, use the form with subject "Press Inquiry".</p>
+          </div>
+
+          <div class="info-card panel collab-card">
+            <h3 class="info-card-title">Collaborations & Sponsored Posts</h3>
+            <p class="info-card-body">Interested in partnering with us, sponsored content, or brand collaborations? Reach out directly:</p>
+            <a href="mailto:pratikm.marketing@gmail.com" class="collab-email">pratikm.marketing@gmail.com</a>
+          </div>
+
+          <div class="info-card panel">
+            <h3 class="info-card-title">Follow Live</h3>
+            <div class="social-links">
+              <a href="https://twitter.com/techaudit_in" target="_blank" rel="noopener noreferrer" class="social-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                @techaudit_in
+              </a>
+              <a href="/rss.xml" class="social-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                </svg>
+                RSS Feed
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    padding: 4rem 0 3rem;
+    position: relative;
+  }
+
+  .contact-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--neon);
+  }
+
+  .mono-tag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--neon);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .contact-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--neon);
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-subtitle {
+    color: var(--dim);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .contact-body {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+  }
+
+  .form-panel {
+    padding: 2rem;
+  }
+
+  .form-section-title {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .info-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-card-title {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+  }
+
+  .info-card-body {
+    color: var(--dim);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  .info-badge { margin-top: 0.5rem; }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .social-link:hover { color: var(--cyan); }
+
+  .collab-card { border-color: var(--cyan); }
+
+  .collab-email {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+    border-bottom: 1px solid rgba(0,229,255,0.3);
+    margin-top: 0.5rem;
+    word-break: break-all;
+  }
+  .collab-email:hover { color: var(--neon); border-bottom-color: var(--neon); }
+
+  @media (max-width: 900px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>

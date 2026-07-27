@@ -1,0 +1,7 @@
+# TechAudit
+> Breaking tech news, security research, and critical analysis on AI, cybersecurity, hardware, and policy.
+
+- [Home](https://techaudit.in/)
+- [News](https://techaudit.in/blog/)
+- [About](https://techaudit.in/about/)
+- [RSS](https://techaudit.in/rss.xml)

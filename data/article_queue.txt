@@ -1,0 +1,5 @@
+# Article Queue
+# Add one URL per line — articles will be generated for any URL not yet processed.
+# Lines starting with # are ignored.
+# Example:
+# https://techcrunch.com/2025/07/27/some-article/

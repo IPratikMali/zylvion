@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "keyFacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pubDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "category": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "sourceSite": {
+      "type": "string"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "pubDate",
+    "category",
+    "source",
+    "sourceSite"
+  ]
+}

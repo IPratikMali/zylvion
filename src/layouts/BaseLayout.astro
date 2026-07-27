@@ -1,0 +1,41 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+  author?: string;
+  tags?: string[];
+  canonicalURL?: string;
+}
+
+const { title, description, image, type, pubDate, author, tags, canonicalURL } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      pubDate={pubDate}
+      author={author}
+      tags={tags}
+      canonicalURL={canonicalURL}
+    />
+  </head>
+  <body>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

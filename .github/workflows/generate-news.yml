@@ -1,0 +1,142 @@
+name: Generate News Articles
+
+on:
+  schedule:
+    - cron: '0 8 * * *'       # 8 AM UTC daily — discover URLs + submit batch
+    - cron: '*/15 * * * *'    # every 15 minutes — auto-download when batch is ready
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'submit (discover+batch) | download (collect results) | sync (immediate, no batch)'
+        default: 'submit'
+        required: false
+      limit:
+        description: 'Max articles to process'
+        default: '72'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  # ── 8 AM: discover new URLs + submit batch ──────────────────────────────────
+  submit:
+    if: |
+      (github.event_name == 'schedule' && contains(github.event.schedule, '0 8')) ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.mode == 'submit' || github.event.inputs.mode == ''))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Step 1 — Discover new URLs from sitemaps
+        run: python scripts/discover-urls.py
+
+      - name: Step 2 — Fetch page content + submit OpenAI batch
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_MODEL: gpt-4.1-mini
+          DAILY_LIMIT: ${{ github.event.inputs.limit || '72' }}
+        run: node scripts/submit-batch.js
+
+      - name: Commit updated CSV + batch metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/urls_discovered.csv data/pending_batch.json
+          if git diff --staged --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "chore: submit article batch [$(date -u +%Y-%m-%dT%H:%M)]"
+            git push
+          fi
+
+  # ── 8 PM: download batch results + write articles ───────────────────────────
+  download:
+    if: |
+      (github.event_name == 'schedule') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'download')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Step 3 — Download batch results + write articles
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+        run: node scripts/download-batch.js
+
+      - name: Commit new articles + updated CSV
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/urls_discovered.csv data/pending_batch.json src/content/news/
+          if git diff --staged --quiet; then
+            echo "Nothing new to commit"
+          else
+            COUNT=$(git diff --staged --name-only | grep "src/content/news" | wc -l | tr -d ' ')
+            git commit -m "feat: add ${COUNT} news articles [$(date -u +%Y-%m-%dT%H:%M)]"
+            git pull --rebase origin main
+            git push
+          fi
+
+  # ── Manual sync mode: discover + generate immediately (no batch) ─────────────
+  sync:
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'sync'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Step 1 — Discover new URLs
+        run: python scripts/discover-urls.py
+
+      - name: Step 2 — Generate articles immediately (synchronous, no batch)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_MODEL: gpt-4.1-mini
+          DAILY_LIMIT: ${{ github.event.inputs.limit || '72' }}
+        run: node scripts/generate-articles.js
+
+      - name: Commit articles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/urls_discovered.csv src/content/news/
+          if git diff --staged --quiet; then
+            echo "Nothing new to commit"
+          else
+            COUNT=$(git diff --staged --name-only | grep "src/content/news" | wc -l | tr -d ' ')
+            git commit -m "feat: add ${COUNT} news articles [$(date -u +%Y-%m-%dT%H:%M)]"
+            git pull --rebase origin main
+            git push
+          fi

@@ -1,0 +1,335 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('news', ({ data }) => !data.draft);
+  return articles.map(article => {
+    const parts = article.id.split('/');
+    const slug = parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+    const category = parts[parts.length - 2] || article.data.category;
+    return {
+      params: { category, slug },
+      props: { article },
+    };
+  });
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { title, description, summary, keyFacts, pubDate, category, sourceSite } = article.data;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+const isoDate = pubDate instanceof Date ? pubDate.toISOString() : pubDate;
+const canonicalUrl = Astro.url.href;
+
+const schema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: title,
+  description: description,
+  datePublished: isoDate,
+  dateModified: isoDate,
+  url: canonicalUrl,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Demo News Aggregator',
+    url: Astro.site?.href || '/',
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+  articleSection: category,
+});
+---
+
+<BaseLayout title={title} description={description} type="article" pubDate={pubDate}>
+  <article class="article-wrap">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/news">News</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/news/${category}`}>{category.charAt(0).toUpperCase() + category.slice(1)}</a>
+        <span aria-hidden="true">/</span>
+        <span class="breadcrumb-current">{title.slice(0, 48)}{title.length > 48 ? '…' : ''}</span>
+      </nav>
+
+      <div class="article-layout">
+        <div class="article-main">
+
+          <!-- Article header -->
+          <header class="article-header">
+            <div class="article-meta-row">
+              <a href={`/news/${category}`} class="category-badge">{category}</a>
+              <time class="article-date" datetime={isoDate}>{formattedDate}</time>
+              {sourceSite && <span class="article-source">via {sourceSite}</span>}
+            </div>
+            <h1 class="article-title">{title}</h1>
+            <p class="article-deck">{description}</p>
+          </header>
+
+          <!-- Executive summary -->
+          {summary && (
+            <aside class="exec-summary">
+              <p class="exec-label">Quick take</p>
+              <p class="exec-body">{summary}</p>
+            </aside>
+          )}
+
+          <!-- Key facts -->
+          {keyFacts && keyFacts.length > 0 && (
+            <aside class="key-facts">
+              <p class="key-facts-label">Key facts</p>
+              <ul class="key-facts-list">
+                {keyFacts.map((fact: string) => <li>{fact}</li>)}
+              </ul>
+            </aside>
+          )}
+
+          <!-- Article body -->
+          <div class="article-body prose">
+            <Content />
+          </div>
+
+          <!-- Footer -->
+          <footer class="article-footer">
+            <div class="article-footer-inner">
+              <a href={`/news/${category}`} class="footer-back">&larr; More {category} coverage</a>
+              <div class="footer-links">
+                <a href="/news">All categories</a>
+                <a href="/">Live feed</a>
+              </div>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+  <script type="application/ld+json" is:inline set:html={schema} />
+</BaseLayout>
+
+<style>
+  .article-wrap { padding: 1.75rem 0 5rem; }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-family: var(--ui);
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .breadcrumb a { color: var(--dim); transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb-current { color: var(--dim); }
+
+  /* Layout */
+  .article-layout { display: flex; gap: 3rem; }
+  .article-main { flex: 1; min-width: 0; max-width: 72ch; }
+
+  /* Article header */
+  .article-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .article-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .article-date {
+    font-family: var(--ui);
+    font-size: 0.7rem;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .article-source {
+    font-family: var(--ui);
+    font-size: 0.68rem;
+    color: var(--muted);
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .article-title {
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0 0 0.85rem;
+    text-wrap: balance;
+  }
+
+  .article-deck {
+    font-family: var(--ui);
+    font-size: 1.05rem;
+    color: var(--dim);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* Executive summary */
+  .exec-summary {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-tint);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .exec-label {
+    font-family: var(--ui);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.45rem;
+  }
+
+  .exec-body {
+    font-family: var(--ui);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--dim);
+    margin: 0;
+  }
+
+  /* Key facts */
+  .key-facts {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--text);
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    background: var(--surface);
+  }
+
+  .key-facts-label {
+    font-family: var(--ui);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.65rem;
+  }
+
+  .key-facts-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .key-facts-list li {
+    font-family: var(--ui);
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  /* Article body */
+  .article-body {
+    margin-bottom: 3rem;
+  }
+
+  .article-body :global(h2) {
+    font-family: var(--display);
+    font-size: 1.28rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+    margin: 2.25rem 0 0.75rem;
+    text-wrap: balance;
+  }
+
+  .article-body :global(p) {
+    font-family: var(--prose);
+    font-size: 1.1rem;
+    line-height: 1.82;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .article-body :global(p:last-of-type) { margin-bottom: 0; }
+
+  .article-body :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s;
+  }
+  .article-body :global(a:hover) { text-decoration-color: var(--accent); }
+
+  .article-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .article-body :global(strong) { font-weight: 700; }
+
+  /* Article footer */
+  .article-footer {
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+
+  .article-footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-back {
+    font-family: var(--ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .footer-back:hover { text-decoration: underline; }
+
+  .footer-links {
+    display: flex;
+    gap: 1.25rem;
+  }
+  .footer-links a {
+    font-family: var(--ui);
+    font-size: 0.72rem;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .article-layout { flex-direction: column; gap: 0; }
+    .article-main { max-width: none; }
+    .article-title { font-size: clamp(1.4rem, 5vw, 1.9rem); }
+    .article-body :global(p) { font-size: 1rem; line-height: 1.75; }
+    .article-deck { font-size: 0.95rem; }
+  }
+</style>

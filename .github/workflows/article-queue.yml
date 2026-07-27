@@ -1,0 +1,43 @@
+name: Process Article Queue
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour — check queue for new URLs
+  workflow_dispatch:       # manual trigger anytime
+
+permissions:
+  contents: write
+
+jobs:
+  process-queue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate articles for new queue URLs
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_MODEL: gpt-4.1-mini
+          SITE_ID: ${{ secrets.SITE_ID }}
+        run: node scripts/process-queue.js
+
+      - name: Commit new articles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/article_queue_done.txt src/content/news/
+          if git diff --staged --quiet; then
+            echo "Nothing new to commit"
+          else
+            COUNT=$(git diff --staged --name-only | grep "src/content/news" | wc -l | tr -d ' ')
+            git commit -m "feat: add ${COUNT} queued articles [$(date -u +%Y-%m-%dT%H:%M)]"
+            git pull --rebase origin main
+            git push
+          fi

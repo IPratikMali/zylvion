@@ -1,0 +1,172 @@
+---
+import { SITE_TITLE } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+
+    <div class="footer-rule footer-rule--top"></div>
+
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <a href="/" class="footer-wordmark">{SITE_TITLE}</a>
+        <p class="footer-desc">
+          Original reporting and analysis drawn from 24 independent sources.
+          Every article is editorially generated with a fresh angle — not a summary.
+        </p>
+        <a href="/rss.xml" class="footer-rss" aria-label="RSS feed">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          RSS feed
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <p class="footer-nav-label">Coverage</p>
+        <ul>
+          <li><a href="/">Live feed</a></li>
+          <li><a href="/news">All articles</a></li>
+          <li><a href="/news/tech">Technology</a></li>
+          <li><a href="/news/business">Business</a></li>
+          <li><a href="/news/science">Science</a></li>
+          <li><a href="/news/world">World</a></li>
+        </ul>
+      </nav>
+
+      <!-- Legal -->
+      <nav class="footer-nav" aria-label="Legal">
+        <p class="footer-nav-label">Site</p>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy policy</a></li>
+          <li><a href="/terms">Terms of service</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-rule footer-rule--bottom"></div>
+
+    <div class="footer-bottom">
+      <span>&copy; {year} {SITE_TITLE}. All rights reserved.</span>
+      <span class="footer-domain">demonewsaggregator.com</span>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--bg);
+    margin-top: 4rem;
+  }
+
+  .footer-rule--top {
+    border-top: 3px solid var(--text);
+    border-bottom: 1px solid var(--border);
+    height: 5px;
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-rule--bottom {
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0 0;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem 3rem;
+  }
+
+  /* Brand column */
+  .footer-wordmark {
+    display: block;
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+  }
+  .footer-wordmark:hover { color: var(--accent); }
+
+  .footer-desc {
+    font-family: var(--ui);
+    font-size: 0.8rem;
+    color: var(--dim);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    max-width: 36ch;
+  }
+
+  .footer-rss {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--ui);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .footer-rss:hover { text-decoration: underline; }
+
+  /* Nav columns */
+  .footer-nav-label {
+    font-family: var(--ui);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-nav a {
+    font-family: var(--ui);
+    font-size: 0.8rem;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-nav a:hover { color: var(--accent); }
+
+  /* Bottom bar */
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0 1.5rem;
+    font-family: var(--ui);
+    font-size: 0.7rem;
+    color: var(--muted);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-domain { letter-spacing: 0.04em; }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-brand { grid-column: auto; }
+    .footer-desc { max-width: none; }
+  }
+</style>
